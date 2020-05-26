@@ -1,0 +1,36 @@
+.container {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+  
+    font-size: 0.28rem;
+    background: #ffffff;
+  }
+  .videoList > .item {
+    height: 2.31rem;
+  }
+  .videoList > .item > .itemImg {
+    width: 2.9rem;
+    height: 1.65rem;
+    border-radius: 0.05rem;
+  }
+  .videoList > .item > .itemInfo {
+    height: 1.65rem;
+    width: 3.2rem;
+    margin-left: 0.43rem;
+  }
+  .videoList > .item > .itemInfo > .infoTitle > .title {
+    color: #2d2d2d;
+    font-weight: 700;
+    font-size: 0.3rem;
+  }
+  .videoList > .item > .itemInfo > .infoTitle > .desc {
+    color: #8a898a;
+  }
+  .videoList > .item > .itemInfo > .infoData > .viewNum {
+    color: #8a898a;
+  }
+  .videoList > .item > .itemInfo > .infoData > .integral {
+    color: #ec8c4b;
+  }
