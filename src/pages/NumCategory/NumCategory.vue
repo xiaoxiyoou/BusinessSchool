@@ -1,24 +1,22 @@
 <template>
   <div class="container">
     <div>
-    <img class="banner" :src="VideoSectionBgimg" @click="banerDetail()" alt="">
-    <ul class="videoList" ref="videoList">
-      <li @click="handleList(item.VideoId)" class="item row border-bottom-1px j-c a-c" v-for="(item, index) in videoList" :key="index">
-        <img class="itemImg" :src="item.VideoConver" alt="">
-        <div class="itemInfo col j-b">
-          <div class="infoTitle">
-            <div class="title">{{item.VideoName}}</div>
-            <div class="desc">{{item.VideoDesc}}</div>
+      <img class="banner" :src="VideoSectionBgimg" @click="banerDetail()" alt="">
+      <ul class="videoList" ref="videoList">
+        <li @click="handleList(item.VideoId)" class="item row border-bottom-1px j-c a-c" v-for="(item, index) in videoList" :key="index">
+          <img class="itemImg" :src="item.VideoConver" alt="">
+          <div class="itemInfo col j-b">
+            <div class="infoTitle">
+              <div class="title">{{item.VideoName}}</div>
+              <div class="desc">{{item.VideoDesc}}</div>
+            </div>
+            <div class="infoData row j-b">
+              <div class="integral">{{item.SalePrice}}元</div>
+              <div class="viewNum">{{item.ViewTotal}}人观看</div>
+            </div>
           </div>
-          <div class="infoData row j-b">
-            <div class="integral">{{item.SalePrice}}元</div>
-            <div class="viewNum">{{item.ViewTotal}}人观看</div>
-           
-          </div>
-        </div>
-      </li>
-
-    </ul>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -30,7 +28,7 @@ export default {
     return {
       videoList: [],
       pageIndex: 1,
-      VideoSectionBgimg:'',
+      VideoSectionBgimg: '',
       pageSize: 1000
 
 
@@ -41,7 +39,7 @@ export default {
 
   },
   mounted() {
-    localStorage.setItem('videoSectionId',this.$route.query.id)
+    localStorage.setItem('videoSectionId', this.$route.query.id)
     // 超出滚动
     this.$nextTick(() => {
       this.scroll = new BScroll('.container', { click: true })
@@ -63,17 +61,23 @@ export default {
     },
     // 进入课程详情
     handleList(videoId) {
-      this.$router.push({
-        path: '/NunVideoDetail',
-        query: { id:videoId }
-      })
+      if (this.$route.query.id == 3) {
+        window.location.href = "http://union.app.jzb768.com/#/LoginIn"
+      } else {
+        this.$router.push({
+          path: '/NunVideoDetail',
+          query: { id: videoId }
+        })
+      }
     },
     //banner详情
-    banerDetail(){
-       this.$router.push({
-        path: '/banerDetail',
-        query: { id:this.$route.query.id }
-      })
+    banerDetail() {
+      if (this.$route.query.id != 3) {
+        this.$router.push({
+          path: '/banerDetail',
+          query: { id: this.$route.query.id }
+        })
+      }
 
     }
 
@@ -93,7 +97,7 @@ export default {
   font-size: 0.28rem;
   background: #ffffff;
 }
-.banner{
+.banner {
   height: 3.2rem;
   width: 100%;
 }
@@ -125,7 +129,7 @@ export default {
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp:1;
+  -webkit-line-clamp: 1;
   text-overflow: ellipsis;
 }
 .videoList > .item > .itemInfo > .infoData > .viewNum {

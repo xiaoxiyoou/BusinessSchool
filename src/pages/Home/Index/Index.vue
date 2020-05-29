@@ -65,7 +65,7 @@
             <div class="bar" v-if="item.VideoCategoryName == '积分兑换'"></div>
             <div class="title row a-c j-b" v-if="item.VideoCategoryName == '积分兑换'">
               <div class="name">社员专享</div>
-         
+
             </div>
             <!-- 课程内容 -->
             <div class="list row j-b f-w" v-if="item.VideoCategoryName == '积分兑换'">
@@ -101,6 +101,25 @@
               </div>
             </div>
             <div class="barTwo"></div>
+            <!-- 城商课程 -->
+            <div class="bar" v-if="item.VideoCategoryName == '积分兑换'"></div>
+            <div class="title row a-c j-b" @click="lookAllnum(3)" v-if="item.VideoCategoryName == '积分兑换'">
+              <div class="name">家族宝诚商专属课程</div>
+              <div class="lookAll row a-c">更多
+                <van-icon name="arrow" />
+              </div>
+            </div>
+            <div class="list row j-b f-w " v-if="item.VideoCategoryName == '积分兑换'">
+              <div class="item" v-for="(res, index) in shopList" :key="index" @click="lookAllnum(3)">
+                <img :src="res.VideoConver" alt="" />
+                <div class="itemInfoCon">
+                  <div class="itemInfo row j-b">
+                    <div class="name">{{res.VideoName}}</div>
+                  </div>
+                  <div class="desc">{{res.VideoDesc}}</div>
+                </div>
+              </div>
+            </div>
             <!-- 帮扶计划 -->
             <div class="bar" v-if="item.VideoCategoryName == '积分兑换'"></div>
             <div class="title row a-c j-b" v-if="item.VideoCategoryName == '积分兑换'" @click="helpLook()">
@@ -121,9 +140,7 @@
                 </div>
               </div>
             </div>
-
           </div>
-
         </section>
 
         <!-- 399繁星社员推广广告 -->
@@ -148,7 +165,7 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-import { getList, getSwiperList, geMembertList, witnessList, getUserInfo, toSign } from 'api/index'
+import { getList, NumCategory, getSwiperList, geMembertList, witnessList, getUserInfo, toSign } from 'api/index'
 import BScroll from 'better-scroll'
 import { Toast } from 'vant';
 export default {
@@ -179,31 +196,28 @@ export default {
         // { txt: '9.9公开课', img: require('./img/9.9.png'), path: '/OpenClass' },
         { txt: '帮扶计划', img: require('./img/help.png'), path: '/OpenClass' },
         { txt: '智库导师', img: require('./img/teacher.png'), path: '/teacher' },
-        { txt: '成为社员', img: require('./img/renwendaguan.png'), path: '/BecomingMember' }
+        // { txt: '成为社员', img: require('./img/renwendaguan.png'), path: '/BecomingMember' }
+        { txt: '诚商课程', img: require('./img/traesure.png'), path: '/NumCategory?id=3' }
       ],
       indexData: [],
       geMembertData: [],
       witnessListImg: [],
-      banner: []
+      banner: [],
+      shopList: [],
+      code: 0
 
 
     }
   },
   computed: {
-    // time: function () {
-    //   var d1 = new Date();
-    //   var d2 = new Date('2020/03/16 17:00:00');
-    //   console.log(parseInt(d2 - d1) / (3600 * 1000))
-    //   var num = Math.floor( parseInt(d2 - d1) / (3600 * 1000))
-    //   return num+'小时后'
-    // }
+
 
   },
   created() {
-    Toast.loading({
-      message: '加载中...',
-      forbidClick: true
-    });
+    // Toast.loading({
+    //   message: '加载中...',
+    //   forbidClick: true
+    // });
     this._getSwiperList(1)
     this._getSwiperList(3)
     this._getSwiperList(4)
@@ -211,7 +225,7 @@ export default {
     this._geMembertList()
     this._witnessList(0)
     this._witnessList(1)
-    this._getUserInfo()
+    this._NumCategory()
 
   },
   // 清除tabar缓存
@@ -221,11 +235,10 @@ export default {
   },
   mounted() {
 
-    // 立即授权回调
-    // if(localStorage.getItem('fromUrlDetail')){
-    //    let routh = localStorage.getItem('fromUrlDetail').split('#')[1]
-    //   this.$router.replace(routh)
-    // }
+    // setTimeout(() => {
+    //   }, "1000");
+    this._getUserInfo()
+
     if (sessionStorage.getItem('qrcodeCon') == 'false') {
       sessionStorage.setItem('qrcodeCon', false)
       this.qrcodeCon = false
@@ -239,12 +252,29 @@ export default {
       this.scroll = new BScroll('.pageShow', { click: true })
     })
 
+    // setTimeout(() => {
+    //   if (this.code != 0) {
+    //     this.$router.push({
+    //       path: '/login',
+    //     })
+    //   }
+    // }, "10000");
+
 
   },
 
   methods: {
+    _NumCategory() {
+      NumCategory({
+        videoSectionId: 3
+      }).then(res => {
+        console.log('商家', res)
+        this.shopList = res.data.VideoListView.slice(0, 2)
+
+      })
+
+    },
     propaganda() {
-      //  window.location.href = 'https://appt2ipqewv9303.h5.xiaoeknow.com/mp_more/eyJpZCI6ImFsaXZlIiwiY2hhbm5lbF9pZCI6IiIsImNvbXBvbmVudF9pZCI6NTczODkxNn0'
       window.location.href = 'https://appt2ipqewv9303.h5.xiaoeknow.com/mp_more/eyJpZCI6IjE5Njk4MzgifQ'
     },
     setting() {
@@ -367,6 +397,7 @@ export default {
         })
       }
     },
+    // 成为社员
     Advertise() {
       this.$router.push({
         path: '/BecomingMember',
@@ -376,13 +407,15 @@ export default {
     _getUserInfo() {
       getUserInfo().then(res => {
         console.log('用户信息', res)
-        if (res.code === 0) {
-          console.log('执行')
+        // alert(localStorage.getItem('VideoUserId'))
+        if (res.code == 0) {
           this.userObj = Object.assign({}, res.data)
+          console.log('执行')
+
         } else {
-           this.$router.push({
-             path: '/login',
-           })
+          this.$router.push({
+            path: '/login',
+          })
 
         }
       })

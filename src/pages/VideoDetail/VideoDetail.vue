@@ -271,7 +271,7 @@ export default {
     computedHeight() {
       let awaitTimer = setTimeout(() => {
         clearTimeout(awaitTimer)
-        this.$refs.descCon.style.height = (document.documentElement.clientHeight - '90')/100 + 'rem'
+        this.$refs.descCon.style.height = (document.documentElement.clientHeight - '90') / 100 + 'rem'
       }, 10)
     },
     dataMsg() {
@@ -290,7 +290,7 @@ export default {
         path: '/MyApply',
       })
     },
-    _getJsSdk() {
+    _getJsSdk(id) {
       getSdkData({
         tempurl: encodeURIComponent(location.href.split('#')[0]),
       }).then(res => {
@@ -301,7 +301,7 @@ export default {
         wx.ready(() => {
           wx.onMenuShareTimeline({
             title: this.title, // 分享标题
-            link: 'http://school.fg1413.com/tradercollegevideo/#' + localStorage.getItem('fromUrlTwo'),
+            link: 'http://school.fg1413.com/tradercollegevideo/#/videodetail?id=' + id,
             imgUrl: 'http://school.fg1413.com/tradercollegevideo/img/share.png', // 分享图标
             desc: this.desc, // 分享描述
             success: () => {
@@ -313,7 +313,7 @@ export default {
           })
           wx.onMenuShareAppMessage({
             title: this.title, // 分享标题
-            link: 'http://school.fg1413.com/tradercollegevideo/#' + localStorage.getItem('fromUrlTwo'),
+            link: 'http://school.fg1413.com/tradercollegevideo/#/videodetail?id=' + id,
             imgUrl: 'http://school.fg1413.com/tradercollegevideo/img/share.png', // 分享图标
             desc: this.desc, // 分享描述
             success: () => {
@@ -344,9 +344,7 @@ export default {
           });
           console.log('横向滚动', this.scroll)
         }
-        //  else {
-        //   this.scroll.refresh();
-        // }
+
       });
     },
     // 点击免费观看
@@ -542,14 +540,12 @@ export default {
           }
           console.log(' this.VideoContent', this.VideoContent)
           this._episodes()
-          // share(this.VideoObj.VideoName, this.VideoObj.VideoDesc)
           this.title = this.VideoObj.VideoName
           this.desc = this.VideoObj.VideoDesc
           this.VideoContent = this.VideoObj.VideoContent
           const regex = new RegExp('<img', 'gi')
           this.VideoContent = this.VideoContent.replace(regex, `<img style="max-width: 100%; height: auto"`);
-          this._getJsSdk()
-          // this.VideoContent = this.richtextfindtel(this.VideoContent)
+          this._getJsSdk(this.VideoObj.VideoId)
 
           this.computedHeight()
 
@@ -557,35 +553,8 @@ export default {
         }
       })
     },
-    // 修改富文本里面的电话
-    richtextfindtel(value) {
-      /*固定电话、手机号码、邮箱*/
-      var tempValue = value.replace(/<[^>]+>/g, "");
-      var arrMatch = tempValue.match(/[0-9a-z][0-9a-z\-_.]+@([0-9a-z][0-9a-z-]*\.)+[a-z]{2,}|0[0-9]{2,3}-{0,1}[2-9][0-9]{6,7}|[0-9]+/g);
-      //按长度排序，避免被提前替换
-      if (arrMatch) {
-        for (var i = 0; i < arrMatch.length; i++) {
-          for (var j = i + 1; j < arrMatch.length; j++) {
-            if (arrMatch[i].length < arrMatch[j].length) {
-              var tmp = arrMatch[i];
-              arrMatch[i] = arrMatch[j];
-              arrMatch[j] = tmp;
-            }
-          }
-        }
-        for (var match in arrMatch) {
-          var t = arrMatch[match];
-          var replacev = '';
-          if (/^1[34578]\d{9}$/.test(t) || /^\d{7,8}$/.test(t)) {
-            replacev = '<a href="tel:' + t + '">' + t + '</a>';
-          }
 
-          var reg = new RegExp("(?!<a .*?>.*?)" + t + "(?![^<]*</a>)", "gmi");
-          value = value.replace(reg, replacev);
-        }
-      }
-      return value;
-    },
+    // 发送邀请
     toInvited() {
       this.$router.push({ path: '/MyExtension' })
     },
@@ -715,10 +684,7 @@ export default {
       })
     },
 
-    // // 视频点击事件
-    // videoPlay() {
-    //   console.log('视频播放点击第二中')
-    // },
+
 
 
     // 关闭积分购买
@@ -766,25 +732,7 @@ export default {
         }
       })
     },
-    // // 获取支付id
-    // _GetWebChatOpenId() {
-    //   let fromUrlDetail = document.location.hash
-    //   localStorage.setItem('fromUrlDetail', fromUrlDetail)
-    //   // let redirectUrl = 'http://192.168.8.151:8080/tradercollegevideo#/videodetail?id=21'
-    //   let redirectUrl = 'http://192.168.8.151:8080/tradercollegevideo/' + localStorage.getItem('fromUrlDetail')
-    //   // let redirectUrl = window.location.href
-    //   let url = 'http://wxapi.fuyulove.com/sns/getcode.aspx?keys=school&redirect_uri=' + redirectUrl
-    //   window.location.href = url
-    //   console.log('url', url)
-    //   let param = this.GetRequest();
-    //   let code = param.code
-    //   console.log('code', code)
-    //   GetWebChatOpenId({
-    //     code: code
-    //   }).then(res => {
-    //     console.log('获取支付id', res)
-    //   })
-    // }
+
   }
 }
 </script>
@@ -1013,6 +961,7 @@ export default {
   width: 100%;
   height: 100%;
   background-color: rgba(62, 54, 42, 0.4);
+  z-index: 0;
 }
 
 .container .quizDialog .quizWrap {

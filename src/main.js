@@ -35,17 +35,11 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {
     let fromUrl = VueCookies.get('fromUrl', to.fullPath)
     localStorage.setItem('fromUrlTwo', decodeURIComponent(to.fullPath))
-    // console.log('外层执行次数')
     if (!fromUrl) {
-      // console.log('内层执行次数')
       VueCookies.set('fromUrl', to.fullPath)
 
     }
     if (localStorage.getItem('VideoUserId') && localStorage.getItem('openid')) {
-      // if (sessionStorage.getItem('VideoUserId')  && sessionStorage.getItem('openid')) {
-      // VueCookies.set('fromUrl','')
-
-
       next();
     } else {
       next({

@@ -76,5 +76,6 @@ module.exports = {
 
 
   },
-  publicPath: '/tradercollegevideo'
+  publicPath: '/tradercollegevideo',
+  productionSourceMap: false
 }

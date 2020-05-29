@@ -236,7 +236,7 @@ export default {
   },
 
   mounted() {
-      window.addEventListener('resize', () => {
+    window.addEventListener('resize', () => {
       this.computedHeight()
     })
 
@@ -271,7 +271,7 @@ export default {
         path: '/MyApply',
       })
     },
-    _getJsSdk() {
+    _getJsSdk(id) {
       getSdkData({
         tempurl: encodeURIComponent(location.href.split('#')[0]),
       }).then(res => {
@@ -282,7 +282,7 @@ export default {
         wx.ready(() => {
           wx.onMenuShareTimeline({
             title: this.title, // 分享标题
-            link: 'http://school.fg1413.com/tradercollegevideo/#' + localStorage.getItem('fromUrlTwo'),
+            link: 'http://school.fg1413.com/tradercollegevideo/#/NunVideoDetail?id=' + id,
             imgUrl: 'http://school.fg1413.com/tradercollegevideo/img/share.png', // 分享图标
             desc: this.desc, // 分享描述
             success: () => {
@@ -294,7 +294,7 @@ export default {
           })
           wx.onMenuShareAppMessage({
             title: this.title, // 分享标题
-            link: 'http://school.fg1413.com/tradercollegevideo/#' + localStorage.getItem('fromUrlTwo'),
+            link: 'http://school.fg1413.com/tradercollegevideo/#NunVideoDetail?id=' + id,
             imgUrl: 'http://school.fg1413.com/tradercollegevideo/img/share.png', // 分享图标
             desc: this.desc, // 分享描述
             success: () => {
@@ -530,12 +530,8 @@ export default {
           this._episodes()
           this.title = this.VideoObj.VideoName
           this.desc = this.VideoObj.VideoDesc
-
-          this._getJsSdk()
-           this.computedHeight()
-
-          // share(this.VideoObj.VideoName, this.VideoObj.VideoDesc)
-
+          this._getJsSdk(this.VideoObj.VideoId)
+          this.computedHeight()
 
         }
       })
@@ -563,7 +559,7 @@ export default {
     closeQuiz() {
       this.isShowQuiz = false
     },
-  
+
     // 提交评论
     submit() {
       if (!this.quiztext) {
@@ -875,6 +871,7 @@ export default {
   width: 100%;
   height: 100%;
   background-color: rgba(62, 54, 42, 0.4);
+  z-index: 0;
 }
 
 .container .quizDialog .quizWrap {
