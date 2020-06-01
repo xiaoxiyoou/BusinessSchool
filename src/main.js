@@ -39,7 +39,7 @@ router.beforeEach((to, from, next) => {
       VueCookies.set('fromUrl', to.fullPath)
 
     }
-    if (localStorage.getItem('VideoUserId') && localStorage.getItem('openid')) {
+    if (localStorage.getItem('VideoUserId') && localStorage.getItem('openid') && VueCookies.get('VideoUserId')) {
       next();
     } else {
       next({

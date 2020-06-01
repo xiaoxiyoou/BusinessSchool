@@ -3,15 +3,15 @@
     <!-- <div class="wrapper"> -->
     <div class="topContent">
       <video-player v-show="!becomMemberCon && !byyWrapper && !datamsg" ref="videoPlayer" style="width:100%; height:4.2rem; object-fit: fill" class="video-player vjs-custom-skin" :playsinline="playsinline" :options="playerOptions" @canplay="onPlayerCanplay($event)" @play="onPlayerPlay($event)" @pause="onPlayerPause($event)" />
-      <!-- <img v-show="byyWrapper" class="videoImg" src="./img/flag.png"> -->
+      <!-- 积分购买显示 -->
       <img v-show="byyWrapper" class="videoImg" :src="VideoObj.VideoImg">
+      <!-- 下载学习资料显示 byyWrapper 购买时候出现积分弹框  防止冲突 -->
       <div @click="dataMsg()" class="msgCon" v-show="!byyWrapper && datamsg">
-        <img v-show="!byyWrapper && datamsg" class="videoImg" :src="VideoObj.VideoImg">
+        <img class="videoImg" :src="VideoObj.VideoImg">
         <div class="tip col a-c j-c">
           <img src="./../../assets/img/load.png">
           <div>点击下载学习资料</div>
         </div>
-
       </div>
       <div class="sendBtn row a-c j-c" @click="toInvited">
         <button class="btn">发给好友一起学习</button>
@@ -27,8 +27,8 @@
       <div class="detalItem border-bottom-1px" ref="detailHeight">
         <div class="title">视频介绍</div>
         <div class="descCon" ref="descCon">
-          <!-- <p class="desc" v-html="VideoObj.VideoContent"></p> -->
-          <p class="desc" v-html="VideoContent"></p>
+          <p class="desc" v-if="VideoContent" v-html="VideoContent"></p>
+          <p class="desc" v-else>暂无介绍~</p>
         </div>
       </div>
     </div>
@@ -268,12 +268,14 @@ export default {
   },
 
   methods: {
+    // 计算课程详情高度
     computedHeight() {
       let awaitTimer = setTimeout(() => {
         clearTimeout(awaitTimer)
         this.$refs.descCon.style.height = (document.documentElement.clientHeight - '90') / 100 + 'rem'
       }, 10)
     },
+    // 购买资料链接
     dataMsg() {
       if (this.VideoObj.IsFree == 2 && this.VideoObj.isintegral == 0) {
         console.log('积分课程   客户未购买')
@@ -285,11 +287,13 @@ export default {
 
 
     },
+    // 我的购买
     myAplay() {
       this.$router.push({
         path: '/MyApply',
       })
     },
+    // 分享
     _getJsSdk(id) {
       getSdkData({
         tempurl: encodeURIComponent(location.href.split('#')[0]),
@@ -327,6 +331,7 @@ export default {
       })
 
     },
+    // 视频集数横向滚动
     personScroll(n) {
       // 默认有六个li子元素，每个子元素的宽度为120px
       let width = n * 1;
@@ -505,7 +510,7 @@ export default {
       })
     },
 
-    //   点击保存按钮
+    //   点击保存按钮地址选择
     confirm(value, index) {
       this.show = false
       console.log(value)
@@ -534,19 +539,18 @@ export default {
         if (res.code === 0) {
           let data = res.data
           this.VideoObj = Object.assign({}, data)
+          // 判断是是否有积分购买课程资料
           this.VideoLinkUrl = this.VideoObj.VideoLinkUrl
           if (this.VideoLinkUrl) {
             this.datamsg = true
           }
-          console.log(' this.VideoContent', this.VideoContent)
-          this._episodes()
           this.title = this.VideoObj.VideoName
           this.desc = this.VideoObj.VideoDesc
           this.VideoContent = this.VideoObj.VideoContent
           const regex = new RegExp('<img', 'gi')
           this.VideoContent = this.VideoContent.replace(regex, `<img style="max-width: 100%; height: auto"`);
+          this._episodes()
           this._getJsSdk(this.VideoObj.VideoId)
-
           this.computedHeight()
 
 
@@ -575,6 +579,7 @@ export default {
         videoId: this.$route.query.id
       }).then(res => {
         console.log('课程分节请求', res)
+        // 如果有分节
         if (res.code == 0) {
           this.episodesData = res.data
           this.VideoItemIsFreePathCon = this.episodesData.map(function (item) {
@@ -590,6 +595,8 @@ export default {
 
 
         }
+
+        // 如果没分节 有分节VideoPath为空
         if (this.VideoObj.VideoPath) {
           this.playerOptions['sources'][0]['src'] = this.VideoObj.VideoPath
         }
@@ -641,6 +648,7 @@ export default {
         }
       })
     },
+    // 回首页
     homeback() {
       this.$router.replace({ path: '/home/index' })
     },

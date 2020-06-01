@@ -118,8 +118,7 @@
 import { getSdkData, episodes, getFreeCouese, isBandCouese, isCourseDatail, getVideoDetail, getEvaluateList, sendEvaluate, payCourse, VideoView, getUserInfo } from 'api/index'
 import BScroll from 'better-scroll'
 import { Toast } from 'vant';
-// import { wxpay } from 'assets/js/pay';
-// import share from 'assets/js/share'
+
 import AreaList from 'assets/js/area';
 import { config } from 'assets/js/shareConfig.js'
 var wx = require('weixin-js-sdk');
@@ -266,11 +265,13 @@ export default {
         this.$refs.descCon.style.height = (document.documentElement.clientHeight - '110') / 100 + 'rem'
       }, 10)
     },
+    // 我的购买
     myAplay() {
       this.$router.push({
         path: '/MyApply',
       })
     },
+    // 分享
     _getJsSdk(id) {
       getSdkData({
         tempurl: encodeURIComponent(location.href.split('#')[0]),
@@ -313,6 +314,7 @@ export default {
       document.body.scrollTop = 0
       document.documentElement.scrollTop = 0
     },
+    // 视频集数横向滚动
     personScroll(n) {
       // 默认有六个li子元素，每个子元素的宽度为120px
       let width = n * 1;
@@ -328,12 +330,10 @@ export default {
           scrollY: false,
           eventPassthrough: "vertical"
         });
-        console.log('横向滚动', this.scroll)
-        // } else {
-        //   this.scroll.refresh();
-        // }
+
       });
     },
+    // 视频小窗口播放
 
     onPlayerCanplay(player) {
       console.log('player Canplay!', player)
@@ -344,6 +344,7 @@ export default {
         $('body').find('video').attr('webkit-playsinline', "true").attr('playsinline', "true")
       }
     },
+    // 监听播放
 
     onPlayerPlay(player) {
       console.log('播放')
@@ -361,6 +362,7 @@ export default {
 
 
     },
+    // 暂停
     onPlayerPause(player) {
       console.log('暂停', player)
 
@@ -536,9 +538,11 @@ export default {
         }
       })
     },
+    // 我的邀请
     toInvited() {
       this.$router.push({ path: '/MyExtension' })
     },
+    // 评论
     _getEvaluateList() {
       getEvaluateList({
         pageIndex: this.pageIndex,
@@ -579,6 +583,7 @@ export default {
         }
       })
     },
+    // 首页
     homeback() {
       this.$router.replace({ path: '/home/index' })
     },
@@ -587,7 +592,7 @@ export default {
       this.becomMemberCon = flag
 
     },
-    //   点击保存按钮
+    //   点击保存按钮 地址选择
     confirm(value, index) {
       this.show = false
       console.log(value)
@@ -679,10 +684,9 @@ export default {
 
       })
     },
+    // 选择课程效果切换
     selcetCouerse(index) {
       this.selcetIdndex = index;
-
-
     },
 
   }
