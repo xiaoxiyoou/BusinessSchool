@@ -6,19 +6,25 @@
         <span :class="{ on : curIndex === index }">{{item.txt}}</span>
       </div>
     </nav>
-    <div class="programContent">
+    <div class="programContent" ref="pronbit">
       <div class="content">
         <div class="item" @click="toOfflineDetail(item.OfflineCourseId)" v-for="(item, index) in programList" :key="index">
           <img :src="item.OfflineCourseConver" alt="">
           <p>{{item.OfflineCourseName}}</p>
-          <div class="descCon row j-b">
-            <span class="desc">活动时间：{{item.StartTime}}-{{item.EndTime}}</span>
-            <span class="desc">活动地点：{{item.Address}}</span>
+          <div class="descCon ">
+            <div class="row a-c">
+              <img class="position" src="./time.png" alt="">
+              <span class="desc">活动时间：{{item.StartTime}}-{{item.EndTime}}</span>
+            </div>
+            <div class="row a-c">
+              <img class="position" src="./position.png" alt="">
+              <span class="desc">活动地点：{{item.Address}}</span>
+            </div>
           </div>
         </div>
       </div>
-      
-     <noMessage :noinfoShow="noinfoShow"/>
+
+      <noMessage :noinfoShow="noinfoShow" />
     </div>
   </div>
 </template>
@@ -36,7 +42,7 @@ export default {
       ],
       pageIndex: 1,
       programList: [],
-      noinfoShow :false,
+      noinfoShow: false,
       pageSize: 10
 
 
@@ -54,6 +60,13 @@ export default {
     })
   },
   methods: {
+    scrollIntoView() {
+      this.$refs.pronbit.scrollIntoView({
+        behavior: "smooth",  // 平滑过渡
+        block: "start"  // 上边框与视窗顶部平齐。默认值
+      });
+
+    },
     _getOfflineList(isfinish) {
       getOfflineList({
         pageIndex: this.pageIndex,
@@ -64,17 +77,21 @@ export default {
         if (res.code === 0) {
           this.pageCount = Math.ceil(res.count / 10)
           this.programList = res.data.concat(this.programList)
-           this.noinfoShow =false
+          this.noinfoShow = false
 
-        }else{
-          this.noinfoShow =true
+        } else {
+          this.noinfoShow = true
+          this.programList = []
+
         }
 
       })
     },
+    // 切换
     switchItem(index) {
-      this.curIndex = index
+      // this.scrollIntoView()
       this.programList = []
+      this.curIndex = index
       this._getOfflineList(index)
     },
     toOfflineDetail(id) {
@@ -85,7 +102,7 @@ export default {
     }
   },
   components: {
-      noMessage
+    noMessage
   }
 }
 </script>
@@ -125,37 +142,42 @@ export default {
   left: 0;
   overflow: hidden;
   margin-top: 0.17rem;
-   width: 100%;
+  width: 100%;
   height: 100%;
 }
-.programContent >.content{
+.programContent > .content {
   padding-bottom: 3rem;
-  
 }
-.programContent >.content> .item {
+.programContent > .content > .item {
   width: 100%;
   background-color: #fff;
   padding-bottom: 0.25rem;
   margin-bottom: 0.25rem;
 }
-.programContent >.content> .item > img {
+.programContent > .content > .item > img {
   width: 100%;
   height: 4.2rem;
   margin-bottom: 0.2rem;
 }
-.programContent >.content> .item > p {
+.programContent > .content > .item > p {
   font-size: 0.34rem;
-  color: #2d2d2d;
+  color: #000000;
   padding: 0 0.25rem;
   margin: 0;
 }
-.programContent >.content> .item > .descCon {
+.programContent > .content > .item > .descCon {
   padding: 0 0.25rem;
 }
-.programContent >.content> .item > .descCon > span {
+.programContent > .content > .item > .descCon > .row > span {
   display: block;
-  font-size: 0.22rem;
+  font-size: 0.27rem;
   color: #8a898a;
-  margin-top: 0.3rem;
+  margin-top: 0.21rem;
+}
+.position {
+  width: 0.32rem;
+  height: 0.34rem;
+  margin-right: 0.2rem;
+  margin-top: 0.21rem;
 }
 </style>

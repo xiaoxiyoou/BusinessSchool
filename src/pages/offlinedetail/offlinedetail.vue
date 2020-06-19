@@ -10,53 +10,47 @@
         </div>
       </div>
       <div class="detailContent">
-        <div class="detalItem border-bottom-1px">
+        <div class="detalItem border-bottom-1px" v-if="offLineObj.CourseDesc">
           <div class="title">课程介绍</div>
-          <p class="desc">
-            {{offLineObj.CourseDesc}}
+          <p class="desc">{{offLineObj.CourseDesc}}
           </p>
         </div>
-        <div class="detalItem">
+        <div class="detalItem" v-if="offLineObj.TeacherName">
           <div class="title">主讲导师介绍</div>
-          <div class="subTitle">吴帝伯—导师</div>
-          <p class="desc">
-            {{offLineObj.TeacherDesc}}
+          <div class="subTitle">{{offLineObj.TeacherName}}</div>
+          <p class="desc">{{offLineObj.TeacherDesc}}
           </p>
         </div>
-        <div class="detalItem">
+        <div class="detalItem" v-if="offLineObj.Painpoints">
           <div class="title">痛点现状</div>
-          <p class="desc">
-            {{offLineObj.Painpoints}}
+          <p class="desc">{{offLineObj.Painpoints}}
           </p>
         </div>
-        <div class="detalItem">
+        <div class="detalItem" v-if="offLineObj.Reward">
           <div class="title">学完课程你将可以怎样</div>
-          <p class="desc">
-            {{offLineObj.Reward}}
+          <p class="desc">{{offLineObj.Reward}}
           </p>
         </div>
-        <div class="detalItem">
+        <div class="detalItem" v-if="offLineObj.CoureseContent">
           <div class="title">上课内容</div>
-          <p class="desc">
-            {{offLineObj.CoureseContent}}
+          <p class="desc">{{offLineObj.CoureseContent}}
           </p>
-          <div class="imgList row f-w j-b">
-            <img class="imgItem" v-for="(item,index) in offLineObj.imgList" :key="index" :src="item" alt="">
+          <div class="imgList row f-w j-b" v-if="offLineObj.imgList[0]">
+            <img class="imgItem" v-for="(item,index) in offLineObj.imgList" :key="index" :src="item" alt="" @click="imgPrew(offLineObj.imgList,index)">
 
           </div>
           <p class="worth">{{offLineObj.Worth}}</p>
         </div>
-        <div class="detalItem">
+        <div class="detalItem" v-if="offLineObj.Suitable">
           <div class="title">课程学习对象</div>
-          <p class="desc">
-            {{offLineObj.Suitable}}
+          <p class="desc">{{offLineObj.Suitable}}
           </p>
         </div>
       </div>
 
     </div>
     <div class="bottomTab row  border-top-1px">
-      <div class="phone row a-c j-c border-right-1px">
+      <div class="phone row a-c j-c border-right-1px" @click="call">
         <img src="./img/dianhua.png" alt="">
       </div>
       <div class="price row a-c j-c border-right-1px">
@@ -71,6 +65,7 @@
 
 <script type="text/ecmascript-6">
 import { getOfflineDetail } from 'api/index'
+import { ImagePreview } from 'vant';
 import BScroll from 'better-scroll'
 export default {
   data() {
@@ -89,6 +84,17 @@ export default {
     })
   },
   methods: {
+    // 图片预览
+    imgPrew(flag,index) {
+      ImagePreview({
+        images: flag,
+        closeable: true,
+        startPosition:index,
+        closeOnPopstate:true
+        
+      });
+    },
+
 
     _getOfflineDetail() {
       getOfflineDetail({
@@ -98,6 +104,7 @@ export default {
         if (res.code === 0) {
           let data = res.data
           this.offLineObj = Object.assign({}, data)
+          this.TeacherDesc = this.offLineObj.TeacherDesc.replace(/\n/g, "<br>");
 
         }
       })
@@ -110,6 +117,9 @@ export default {
           id: id
         }
       })
+    },
+    call() {
+      window.location.href = 'tel://4006568666'
     }
   },
   components: {
@@ -126,7 +136,7 @@ export default {
   height: 100%;
   font-size: 0.28rem;
 }
-.wrap{
+.wrap {
   padding-bottom: 2rem;
 }
 .top > .item {
@@ -145,12 +155,13 @@ export default {
   color: #2d2d2d;
   padding-left: 0.25rem;
   font-weight: 700;
+  margin: 0.1rem auto 0;
 }
 .top > .item > span {
   display: block;
   font-size: 0.25rem;
   color: #8a898a;
-  margin-top: 0.2rem;
+  margin-top: 0.1rem;
   padding-left: 0.25rem;
 }
 .detailContent {
@@ -174,25 +185,24 @@ export default {
   margin-top: 0.2rem;
   font-weight: 700;
 }
-.detailContent > .detalItem >.desc {
-  font-size: 0.25rem;
+.detailContent > .detalItem > .desc {
+  font-size: 0.28rem;
   color: #8a898a;
   padding-left: 0.15rem;
-  text-indent: 0.5rem;
-  line-height: .5rem;
+  line-height: 0.5rem;
+  white-space: pre-wrap;
 }
-.detailContent > .detalItem > .imgList >img {
-    width: 49%;
-    height:2.11rem;
-    margin-top: 0.2rem;
-    /* border-radius: 0.1rem; */
-    -webkit-flex-shrink: 0;
-    -ms-flex-negative: 0;
-    flex-shrink: 0;
+.detailContent > .detalItem > .imgList > img {
+  width: 49%;
+  height: 2.11rem;
+  margin-top: 0.2rem;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
 }
-.detailContent > .detalItem > .worth  {
+.detailContent > .detalItem > .worth {
   color: #2d2d2d;
-  font-size: .3rem;
+  font-size: 0.3rem;
   text-indent: 0.6rem;
   text-align: justify;
 }
