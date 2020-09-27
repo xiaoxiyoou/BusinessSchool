@@ -11,8 +11,10 @@
               <div class="desc">{{item.VideoDesc}}</div>
             </div>
             <div class="infoData row j-b">
-              <div class="integral">{{item.SalePrice}}元</div>
-              <div class="viewNum">{{item.ViewTotal}}人观看</div>
+              <div class="integral" v-if="videoSectionId == 3">100积分</div>
+              <div class="integral" v-else>{{item.SalePrice}}元</div>
+              <div class="viewNum" v-if="videoSectionId == 3"></div>
+              <div class="viewNum"  v-else>{{item.ViewTotal}}人观看</div>
             </div>
           </div>
         </li>
@@ -29,7 +31,8 @@ export default {
       videoList: [],
       pageIndex: 1,
       VideoSectionBgimg: '',
-      pageSize: 1000
+      pageSize: 1000,
+      videoSectionId:''
 
 
     }
@@ -39,6 +42,7 @@ export default {
 
   },
   mounted() {
+    this.videoSectionId =  this.$route.query.id
     localStorage.setItem('videoSectionId', this.$route.query.id)
     // 超出滚动
     this.$nextTick(() => {

@@ -79,7 +79,8 @@ export default {
     GetCode() {
 
       // let redirectUrl = 'http://192.168.8.151:8080/tradercollegevideo/#' + this.$cookies.get('fromUrl')
-      let redirectUrl = 'http://school.fg1413.com/tradercollegevideo/#'+ this.$cookies.get('fromUrl')
+      // let redirectUrl = 'http://school.fg1413.com/tradercollegevideo/#'+ this.$cookies.get('fromUrl')
+       let redirectUrl = window.location.href
       let url = 'http://wxapi.fuyulove.com/sns/getcode.aspx?keys=school&redirect_uri=' + redirectUrl
       window.location.href = url
 
